@@ -3,14 +3,26 @@ import { useState } from "react";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-const SearchBar = ({ setWeatherData }) => {
+const SearchBar = ({ setWeatherData, setStatus }) => {
     const [cityName, setCityName] = useState("");
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
+        setStatus("loading");
         fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${API_KEY}`)
             .then(res => res.json())
-            .then(data => setWeatherData(data));
+            .then(data => {
+                if (data.cod === "404") {
+                    setStatus("error");
+                } else {
+                    setWeatherData(data);
+                    setStatus("done");
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                setStatus("error");
+            });
         setCityName("");
     }
 
