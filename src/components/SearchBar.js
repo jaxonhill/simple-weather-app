@@ -11,6 +11,7 @@ const SearchBar = ({ setWeatherData }) => {
         fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${API_KEY}`)
             .then(res => res.json())
             .then(data => setWeatherData(data));
+        setCityName("");
     }
 
     return (
